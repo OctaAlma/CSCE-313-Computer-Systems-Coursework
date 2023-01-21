@@ -1,0 +1,62 @@
+multiple arguments
+
+command pipelining - the outputs of one command become the inputs of the next command
+ - Use the command vector to create the pipeline
+ - Refer to lab3a, unanamed pipes, pipe(),dup(),dup2()
+
+Output redirection - change stdout to file
+ - You will open the file for writing as a file descriptor
+ - use dup2 to redirect stdout (1) to ^this fd 
+ - Each command will store the name of the output file and "" if there is none
+
+input redirection - change stdin from file
+ - Each command will store the name of the input file and "" if there is none
+ - you will open this file for reading via the file descriptor
+ - We will then use dup2 to redirect stdin (0) from the ^this file descriptor
+
+Handle commands that run in the background
+ - return the user prompt to user control until command is done
+ - The command class has a boolean function "isBackground()"
+ - Store the process ID from the child process in a vector of background processes
+ - before prompting user, iterate over vector to reap processes
+    - waitpid has a flag to make it non-blocking, which you should use for background processes
+
+
+changing directory (cd)
+ - To change directories, use the chdir() system call
+ - When the command "cd - " is used, we must keep track of the prev directory
+    - Use the getcwd() system call
+
+
+User prompt - date/time, username, absolute path of current directory
+ - use getenv("USER") and getcwd()
+
+
+Priority:
+0. multiple arguments!!
+    - Test the following stuff
+    - echo "str"
+    - echo -e "str \t str"
+    - ls (set options such as -la)
+1. User Prompt
+    - Add current working directory (cwd) to the prompt
+2. cd
+    = cd ..            <- takes to parent directory
+    - cd ../(dirName)  <- Takes to the specific directory that is a parent
+    - cd-              <- takes to the previous directory
+    - cd/home or cd <child directory>
+
+3. background processes
+    - sleep (3) &
+    - sleep (2)
+    - check if process is reaped (how to check if process is a zombie process)
+
+4. Input/output redirection to files
+    - ps auz > a.txt
+    - grep /init < a 
+    - grep /init < a > b    < ---- grep output should go to file b 
+
+5. Single Piping
+ - ls -l | grep shell
+
+6. Piping with input/output redirecting
